@@ -10,6 +10,9 @@
 .js-inline-editor{
     border: 1px solid transparent;
     display: flex;
+    /* These are required when a value is empty */
+    min-height: 1.6em;
+    min-width: 1.5em;
 }
 /* .editableContent.js-inline-editor:hover{ */
 .js-inline-editor:hover{

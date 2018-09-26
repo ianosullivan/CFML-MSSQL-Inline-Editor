@@ -41,7 +41,9 @@ function CreateInlineEditors(){
 
 	// Generic function to save editable content. 
 	$('body').on('click', '.js-inline-editor + div button.js-save', function(e){
+
 		swal.showLoading();
+
 		// e.preventDefault();
 		console.log('js-save');
 
@@ -49,14 +51,10 @@ function CreateInlineEditors(){
 		var $button_container = $(this).parent();
 		var $el = $button_container.prev(); //Get the actual editor DOM element. It is always the 'Prev' element to the buttons
 
-		
-		
-		// toastrLoader('Saving...');
-
 		$.post('act_save.cfm', 
 		{	
 			encrypted_val: $el.data('encryptedVal'),
-			the_value: $el.html()
+			the_value: $el.text()
 		})
 		.success(function(data) {
 			if(data.result){
@@ -65,9 +63,12 @@ function CreateInlineEditors(){
 				$el
 				.removeClass('active')
 				.removeAttr('contenteditable')
-				.attr('title', 'Click to Edit');
+				.attr('title', 'Click to Edit')
+				.data('originalValue', $el.text() );
+
 				// remove the button container from the DOM
 				$button_container.remove();
+				
 				successMessage();
 			}
 			else{
@@ -107,7 +108,7 @@ function CreateInlineEditors(){
 function cancelOrEscape($button_container, $el){
 	// Reset the element to the original value
 	$el
-	.html( $el.data('originalValue') )
+	.text( $el.data('originalValue') )
 	.removeClass('active')
 	.removeAttr('contenteditable')
 	.attr('title', 'Click to Edit');
