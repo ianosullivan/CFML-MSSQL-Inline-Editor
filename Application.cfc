@@ -64,7 +64,8 @@
 			By having a new secret key generated for every AppReload this can be used as a way to force users to log back into the system AFTER their session has expired
 			Note: Ensure the AppReload code comes BEFORE the check_client_variable code
 		--->
-		<cfset application.secret_key = generateSecretKey('DESede')> 
+		<!--- <cfset application.secret_key = generateSecretKey('DESede')>  --->
+		<cfset application.secret_key = generateSecretKey('AES')> 
 
 
 		<!--- Define the local scope. --->

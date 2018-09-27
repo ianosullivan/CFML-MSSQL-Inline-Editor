@@ -10,7 +10,7 @@
 
 		<!--- Format is {yyyyddmm-hhnnss|||table|||update_column|||pk_col|||pk_id|||related_table}. We add the date part to ensure the value created is unique every time --->
 		<!--- Note the first param is used to further randomise the encrypted value along with the app reloaded secret key --->
-		<cfset LOCAL.encrypted_val = encrypt(
+		<!--- <cfset LOCAL.encrypted_val = encrypt(
 			 		dateTimeFormat( now(),'yyyyddmm-hhnnss' )
 			 		& '|||' & ARGUMENTS.table
 			 		& '|||' & ARGUMENTS.update_column
@@ -18,6 +18,15 @@
 			 		& '|||' & ARGUMENTS.pk_id
 			 		& '|||' & ARGUMENTS.related_table
 		 		, application.secret_key, 'DESede', 'Base64'
+		 	)> --->
+		<cfset LOCAL.encrypted_val = encrypt(
+			 		dateTimeFormat( now(),'yyyyddmm-hhnnss' )
+			 		& '|||' & ARGUMENTS.table
+			 		& '|||' & ARGUMENTS.update_column
+			 		& '|||' & ARGUMENTS.pk_col
+			 		& '|||' & ARGUMENTS.pk_id
+			 		& '|||' & ARGUMENTS.related_table
+		 		, application.secret_key, 'AES', 'Base64'
 		 	)>
 
 		<!--- <cfset LOCAL.return_val = '<span class="js-inline-editor" title="Click to edit" data-original-value="#arguments.the_value#" data-encrypted-val="#local.encrypted_val#">#arguments.the_value#</span>'> --->
@@ -37,7 +46,8 @@
 
 		<cftry>
 			<!--- Try to decrypt and return the user ID. If not just return zero --->
-		 	<cfset LOCAL.decrypted_list = decrypt( arguments.encrypted_val, application.secret_key, 'DESede', 'Base64')>
+		 	<!--- <cfset LOCAL.decrypted_list = decrypt( arguments.encrypted_val, application.secret_key, 'DESede', 'Base64')> --->
+		 	<cfset LOCAL.decrypted_list = decrypt( arguments.encrypted_val, application.secret_key, 'AES', 'Base64')>
 
 		 	<!--- <cfdump var="#LOCAL.decrypted_list#"> --->
 
