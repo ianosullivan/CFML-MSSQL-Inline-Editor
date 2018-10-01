@@ -13,6 +13,7 @@ var editor_buttons = `
 $(function() {
 	//Create nice editors
 	CreateInlineEditors();
+	CreateInlineSelects();
 });
 
 function CreateInlineEditors(){	
@@ -22,7 +23,7 @@ function CreateInlineEditors(){
 
 	// 'Activate' the editor on 'click'
 	// $('.js-inline-editor').on('dblclick', function(e){
-	$('.js-inline-editor').on('click', function(e){
+	$('body').on('click', '.js-inline-editor', function(e){
 		var $this = $(this);
 
 		// If this editor is not already 'active' proceed
@@ -51,12 +52,12 @@ function CreateInlineEditors(){
 		var $button_container = $(this).parent();
 		var $el = $button_container.prev(); //Get the actual editor DOM element. It is always the 'Prev' element to the buttons
 
-		$.post('act_save.cfm', 
+		$.post('actions/act_save.cfm', 
 		{	
-			encrypted_val: $el.data('encryptedVal'),
+			sull: $el.data('sull'),
 			the_value: $el.text()
 		})
-		.success(function(data) {
+		.done(function(data) {
 			if(data.result){
 				// 'Deactivate' the editor
 				// Reset the element to the original value
@@ -74,6 +75,9 @@ function CreateInlineEditors(){
 			else{
 				failMessage(data.message);
 			}
+		})
+		.fail(function(data){
+			failMessage(data.message);
 		})
 	});
 
@@ -104,8 +108,101 @@ function CreateInlineEditors(){
    	});
 }
 
+function CreateInlineSelects(){
+	$('body').on('click','.js-inline-select', function(e){
+		var $this = $(this);
+
+		// If this editor is not already 'active' proceed
+		if( !$this.hasClass('active') ) {
+			// Add action buttons after any editable content
+			// Add the 'active' class, editable attribute and show the buttons
+
+			$this
+			.addClass('active')
+			.removeAttr('title')
+			.html('<i>loading...</i>')
+			.load('action/act_make_select.cfm', {sull: $this.data('sull')}, function(){
+				$this
+				.append(editor_buttons)
+				.find('select').focus();
+			});
+		}
+	});
+
+	// Generic function to save inilne <select>
+	$('body').on('click', '.js-inline-select div.js-editor-button-group button.js-save', function(e){
+		e.stopPropagation();
+
+		swal.showLoading();
+
+		// e.preventDefault();
+		console.log('js-save-select');
+
+		// Get the ID and data/content from the relevant CKEditor object...
+		var $button_container = $(this).parent();
+		var $el = $button_container.prev(); //Get the actual <select> DOM element. It is always the 'Prev' element to the buttons
+		var $el_parent = $el.parent(); //Get the span with the special data attributes
+
+		$.post('action/act_save_select.cfm', 
+		{	
+			sull: $el_parent.data('sull'),
+			the_value_id: $el.val()
+		})
+		.done(function(data) {
+			if(data.result){
+				// console.log(decodeURIComponent(data.new_select_span));
+				var new_select_span = decodeURIComponent(data.new_select_span);
+
+				$el_parent.replaceWith( new_select_span );
+
+				// remove the button container from the DOM
+				$button_container.remove();
+				
+				successMessage();
+			}
+			else{
+				failMessage(data.message);
+			}
+		})
+		.fail(function(data){
+			failMessage(data.message);
+		})
+	});
+
+
+	// Generic function to cancel changes to editable content.
+	$('body').on('click', '.js-inline-select div.js-editor-button-group button.js-cancel', function(e){
+		e.stopPropagation();
+
+		// e.preventDefault();
+		console.log('js-cancel-select');
+
+		// Get the main element
+		var $el_parent = $(this).parent().parent();
+
+		// Reset the element to the original value
+		cancelOrEscapeSelect($el_parent);
+	});
+
+
+	// escape key within the editor to cancel it
+	$('body').on('keyup', '.js-inline-select select', function(e){
+
+		if (e.key === 'Escape') {
+			console.log('escape key pressed within <select>');
+			// Destroy the buttons
+			var $el_parent = $(this).parent();
+
+			// Reset the element to the original value
+			cancelOrEscapeSelect($el_parent);
+	    }
+   	});
+}
 
 function cancelOrEscape($button_container, $el){
+	// remove the button container from the DOM
+	$button_container.remove();
+
 	// Reset the element to the original value
 	$el
 	.text( $el.data('originalValue') )
@@ -113,9 +210,16 @@ function cancelOrEscape($button_container, $el){
 	.removeAttr('contenteditable')
 	.attr('title', 'Click to Edit');
 	
-	// remove the button container from the DOM
-	$button_container.remove();
+	cancelMessage();
+}
 
+function cancelOrEscapeSelect($el_parent){
+	$el_parent
+	.empty()
+	.append('<span>' + $el_parent.data('originalValue') + '</span>')
+	.removeClass('active')
+	.attr('title', 'Click to select new value');
+	
 	cancelMessage();
 }
 

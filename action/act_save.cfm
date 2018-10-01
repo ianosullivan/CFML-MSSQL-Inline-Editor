@@ -1,7 +1,7 @@
 <cfcontent type="application/json"/>
 <cfscript>
 obj = $.editor.save(
-			FORM.encrypted_val,
+			FORM.sull,
 			FORM.the_value
 		);
 </cfscript>

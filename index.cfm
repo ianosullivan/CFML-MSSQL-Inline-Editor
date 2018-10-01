@@ -14,6 +14,10 @@
 	<!--- Fontawesome --->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
 
+	<!--- Select2 --->
+	<!--- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css"> --->
+
+
 	<!-- IMPO :: Custom inline editor style -->
 	<link rel="stylesheet" href="style.css" />
 </head>
@@ -44,7 +48,8 @@
 				)#
 			</div>
 
-			
+			<!--- Users --->
+			<!--- 
 			<table class="table">
 				<thead>
 					<tr>
@@ -105,12 +110,57 @@
 						</td>
 					</tr>
 				</cfloop>
-			</table>
+			</table> 
+			--->
 
+			<!--- Courses --->
+			<legend>Courses</legend>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Description</th>
+						<th>Module</th>
+					</tr>
+  				</thead>
+
+				<cfloop query="qCourses">
+					<cfset table = 'courses'>
+					<cfset pk_col = 'id'>
+
+					<tr>
+						<td>
+							#$.editor.create(
+								table = table
+								,update_column = 'description'
+								,pk_col = 'id'
+								,pk_id = qCourses.id
+								,the_value = qCourses.description
+							)#
+						</td>
+						<td>
+							#$.editor.create_select_editor(
+								table = table
+								,update_column = 'module_id'
+								,pk_col = pk_col
+								,pk_id = qCourses.id
+
+								,the_value = qCourses.module_title
+								,the_value_id = qCourses.module_id
+
+								,related_table = 'modules'
+								,related_table_pk_id = 'id'
+								,related_table_col = 'title'
+							)#
+						</td>
+					</tr>
+				</cfloop>
+			</table>
 
 
 		</div>
 	</div>
+
+
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
