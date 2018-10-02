@@ -52,7 +52,7 @@ function CreateInlineEditors(){
 		var $button_container = $(this).parent();
 		var $el = $button_container.prev(); //Get the actual editor DOM element. It is always the 'Prev' element to the buttons
 
-		$.post('actions/act_save.cfm', 
+		$.post('action/act_save.cfm', 
 		{	
 			sull: $el.data('sull'),
 			the_value: $el.text()

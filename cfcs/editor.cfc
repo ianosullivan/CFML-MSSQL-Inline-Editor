@@ -55,7 +55,7 @@
 		 	<!--- <cfdump var="#LOCAL.decrypted_list#"> --->
 
 		 	<!--- Transform the decrypted list into a struct for use below --->
-		 	<cfset obj = listToStruct(LOCAL.decrypted_list, variables.key_value_delimeter, variables.list_delimeter)>
+		 	<cfset local.obj = listToStruct(LOCAL.decrypted_list, variables.key_value_delimeter, variables.list_delimeter)>
 			<!--- <cfdump var="#local.obj#"> --->
 
 		 	<cfquery name="local.q">
@@ -184,7 +184,7 @@
 	 	<!--- Build the Select --->
 		<cfsavecontent variable="local.return_html">
 		<cfoutput>
-			<select>
+			<select <!--- multiple="multiple" --->>
 				<!--- Loop over the related table and output the ID and the text value --->
 				<cfloop query="local.qryRelatedData">
 					<!--- Get the id and the text value using the syntax query['column'][row] --->

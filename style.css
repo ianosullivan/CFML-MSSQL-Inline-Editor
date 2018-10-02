@@ -7,7 +7,7 @@
     -ms-flex-align: stretch;
     align-items: stretch;    
 }	
-.js-inline-editor, .js-inline-select span{
+.js-inline-editor, .js-inline-select > span{
     border: 1px solid transparent;
     display: flex;
     /* These are required when a value is empty */
@@ -15,7 +15,7 @@
     min-width: 1.5em;
 }
 /* .editableContent.js-inline-editor:hover{ */
-.js-inline-editor:hover, .js-inline-select span:hover{
+.js-inline-editor:hover, .js-inline-select > span:hover{
     border: 1px solid #ccc;
     box-shadow: 0px 0px 10px 0px #BBBBBB;
 }

@@ -1,4 +1,19 @@
-<cfinclude template="build.cfm">
+<!--- Test Query Data // Start --->
+<!--- <cfquery name="qUsers">
+	SELECT 	*
+	FROM 	users
+</cfquery> --->
+
+<!--- Courses with a related module that will turn into a <select> element --->
+<cfquery name="qCourses">
+	SELECT 	c.*, m.id as module_id, m.title as module_title
+	FROM 	courses c
+	JOIN	modules m on m.id = c.module_id
+</cfquery>
+<!--- Test Query Data // End --->
+
+
+
 
 <cfoutput>
 <!DOCTYPE html>
@@ -15,7 +30,7 @@
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
 
 	<!--- Select2 --->
-	<!--- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css"> --->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css">
 
 
 	<!-- IMPO :: Custom inline editor style -->
@@ -26,11 +41,10 @@
 		<div class="row">
 			<div class="col-12 p-0 pb-5">			
 				<h1>CF Inline Editor</h1>
-			</div>
-
-
+			</div>			
 			
 			<!--- Manual --->
+			<!--- 
 			<div class="js-inline-editor" title="Click to edit" data-original="This is just a dummy container and is not connected to a database table.">
 				This is just a dummy container and is not connected to a database table.
 			</div>
@@ -46,80 +60,20 @@
 					,pk_id = 3
 					,the_value = 'The value to be edited'
 				)#
-			</div>
-
-			<!--- Users --->
-			<!--- 
-			<table class="table">
-				<thead>
-					<tr>
-						<th>First</th>
-						<th>Last</th>
-						<th>Email</th>
-						<th>Admin</th>
-						<th>Reset</th>
-					</tr>
-  				</thead>
-
-				<cfloop query="qUsers">
-					<tr>
-						<td>
-							#$.editor.create(
-								table = 'users'
-								,update_column = 'firstname'
-								,pk_col = 'id'
-								,pk_id = qUsers.id
-								,the_value = qUsers.firstname
-							)#
-						</td>
-						<td>
-							#$.editor.create(
-								table = 'users'
-								,update_column = 'surname'
-								,pk_col = 'id'
-								,pk_id = qUsers.id
-								,the_value = qUsers.surname
-							)#
-						</td>
-						<td>
-							#$.editor.create(
-								table = 'users'
-								,update_column = 'email'
-								,pk_col = 'id'
-								,pk_id = qUsers.id
-								,the_value = qUsers.email
-							)#
-						</td>
-						<td>
-							#$.editor.create(
-								table = 'users'
-								,update_column = 'is_admin'
-								,pk_col = 'id'
-								,pk_id = qUsers.id
-								,the_value = qUsers.is_admin
-							)#
-						</td>
-						<td>
-							#$.editor.create(
-								table = 'users'
-								,update_column = 'reset_password'
-								,pk_col = 'id'
-								,pk_id = qUsers.id
-								,the_value = qUsers.reset_password
-							)#
-						</td>
-					</tr>
-				</cfloop>
-			</table> 
+			</div> 
 			--->
 
-			<!--- Courses --->
+			<p> The below table is connected to the CIPCI Courses table on the dev server</p>
+
+			<!--- Courses with related module --->
 			<legend>Courses</legend>
 			<table class="table">
 				<thead>
 					<tr>
-						<th>Description</th>
-						<th>Module</th>
+						<th>Description (string)</th>
+						<th>Course Module (Select)</th>
+						<th title="A custom date input should be created. This is only using the 'string' editor function">Date (uses string)</th>
+						<th title="A custom NUMBER input should be created. This is only using the 'string' editor function">MAX Attempts (uses string)</th>
 					</tr>
   				</thead>
 
@@ -150,6 +104,24 @@
 								,related_table = 'modules'
 								,related_table_pk_id = 'id'
 								,related_table_col = 'title'
+							)#
+						</td>
+						<td>
+							#$.editor.create(
+								table = table
+								,update_column = 'date_updated'
+								,pk_col = 'id'
+								,pk_id = qCourses.id
+								,the_value = qCourses.date_updated
+							)#
+						</td>
+						<td>
+							#$.editor.create(
+								table = table
+								,update_column = 'max_attempts_allowed'
+								,pk_col = 'id'
+								,pk_id = qCourses.id
+								,the_value = qCourses.max_attempts_allowed
 							)#
 						</td>
 					</tr>
