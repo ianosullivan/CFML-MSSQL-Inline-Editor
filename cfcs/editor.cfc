@@ -184,7 +184,7 @@
 	 	<!--- Build the Select --->
 		<cfsavecontent variable="local.return_html">
 		<cfoutput>
-			<select <!--- multiple="multiple" --->>
+			<select <!--- multiple="multiple" ---> class="form-control">
 				<!--- Loop over the related table and output the ID and the text value --->
 				<cfloop query="local.qryRelatedData">
 					<!--- Get the id and the text value using the syntax query['column'][row] --->
